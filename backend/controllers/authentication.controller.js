@@ -7,6 +7,15 @@ import crypto from "crypto";
 
 dotenv.config();
 
+// Email validation regex
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Input sanitization function
+const sanitizeInput = (input) => {
+  if (typeof input !== 'string') return input;
+  return input.replace(/[\r\n\t]/g, '').trim();
+};
+
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -63,10 +72,24 @@ async function register(req, res) {
     return res.status(400).send({ status: "Error", message: "Los campos están incompletos" });
   }
 
+  // Sanitize inputs to prevent injection attacks
+  const sanitizedEmail = sanitizeInput(email);
+  const sanitizedUser = sanitizeInput(user);
+
+  // Validate email format
+  if (!EMAIL_REGEX.test(sanitizedEmail)) {
+    return res.status(400).send({ status: "Error", message: "Formato de email inválido" });
+  }
+
   try {
-    const usuarioExistente = await User.findOne({ user });
+    const usuarioExistente = await User.findOne({ user: sanitizedUser });
     if (usuarioExistente) {
       return res.status(400).send({ status: "Error", message: "Este usuario ya existe" });
+    }
+
+    const emailExistente = await User.findOne({ email: sanitizedEmail });
+    if (emailExistente) {
+      return res.status(400).send({ status: "Error", message: "Este email ya está registrado" });
     }
   
     // Generar token único para verificación
@@ -76,8 +99,8 @@ async function register(req, res) {
     const hashPassword = await bcryptjs.hash(password, salt);
 
     const nuevoUsuario = new User({
-      user,
-      email,
+      user: sanitizedUser,
+      email: sanitizedEmail,
       password: hashPassword,
       dni,
       telefono,
@@ -89,16 +112,17 @@ async function register(req, res) {
 
     await nuevoUsuario.save();
 
-    const verificationLink = `http://localhost:4001/verify-email?token=${verificationToken}`;
+    const baseUrl = process.env.BASE_URL || 'http://localhost:4001';
+    const verificationLink = `${baseUrl}/api/auth/verify-email?token=${verificationToken}`;
 
     await transporter.sendMail({
       from: `"Tu Plataforma" <${process.env.EMAIL_FROM}>`,
-      to: email,
+      to: sanitizedEmail,
       subject: "Verifica tu cuenta",
       html: `
       <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
       <h2 style="color: #e63946;">👋 ¡Bienvenido/a a Hirviendo!</h2>
-        <p>Hola ${user},</p>
+        <p>Hola ${sanitizedUser},</p>
         <p>Gracias por registrarte en <strong>Hirviendo</strong>, la comunidad donde las ideas hierven y se convierten en acción.</p>
 
         <p>Antes de comenzar, necesitamos que verifiques tu correo electrónico para activar tu cuenta.</p>
@@ -116,7 +140,7 @@ async function register(req, res) {
 
     return res.status(201).send({
       status: "ok",
-      message: `Usuario ${nuevoUsuario.user} agregado`,
+      message: `Usuario ${sanitizedUser} agregado`,
       redirect: "/"
     });
   } catch (error) {

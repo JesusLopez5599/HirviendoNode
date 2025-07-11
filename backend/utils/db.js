@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGO_URI = 'mongodb+srv://jesuslopezguerrero38:Juan9596.@jesus5599.15meuat.mongodb.net/usuariosDB?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/usuariosDB';
 
 export const connectDB = async () => {
   try {
