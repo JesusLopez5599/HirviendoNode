@@ -10,5 +10,3 @@ export const connectDB = async () => {
     console.error("❌ Error al conectar a MongoDB:", error.message);
   }
 };
-export default connectDB;
-export { connectDB };  
