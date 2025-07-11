@@ -7,6 +7,13 @@ import crypto from "crypto";
 
 dotenv.config();
 
+// Regex para validar email
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Función para sanitizar entradas
+const sanitizeInput = input =>
+  typeof input === 'string' ? input.replace(/[\r\n\t]/g, '').trim() : input;
+// Configuración del transportador de nodemaile
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -58,11 +65,23 @@ async function login(req, res) {
 
 async function register(req, res) {
   const { user, password, email, dni, telefono, categoria, subcategoria, rol } = req.body;
+  // Sanitizar entradas
+  user = sanitizeInput(user);
+  email = sanitizeInput(email);
+  dni = sanitizeInput(dni);
+  telefono = sanitizeInput(telefono);
+  categoria = sanitizeInput(categoria);
+  subcategoria = sanitizeInput(subcategoria);
+  rol = sanitizeInput(rol);
 
   if (!user || !password || !email || !dni || !telefono || !categoria || !subcategoria || !rol) {
     return res.status(400).send({ status: "Error", message: "Los campos están incompletos" });
   }
-
+  // Validar email
+  if (!EMAIL_REGEX.test(email)) {
+    return res.status(400).send({ status: "Error", message: "Formato de email inválido" });
+  }
+  // Validar que el usuario no exista
   try {
     const usuarioExistente = await User.findOne({ user });
     if (usuarioExistente) {
@@ -89,6 +108,7 @@ async function register(req, res) {
 
     await nuevoUsuario.save();
 
+  
     const verificationLink = `http://localhost:4001/verify-email?token=${verificationToken}`;
 
     await transporter.sendMail({
