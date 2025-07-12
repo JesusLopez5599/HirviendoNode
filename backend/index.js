@@ -32,5 +32,14 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/admin.html'));
 });
 
+app.use('/api/auth', authRoutes);
 const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+
+app.use(express.static(path.join(process.cwd(), 'frontend')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'frontend', 'index.html'));
+});
+
+app.listen(4001, () => console.log('Servidor corriendo en 4001'));
