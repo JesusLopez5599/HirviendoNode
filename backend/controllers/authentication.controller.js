@@ -77,15 +77,20 @@ async function register(req, res) {
   if (!user || !password || !email || !dni || !telefono || !categoria || !subcategoria || !rol) {
     return res.status(400).send({ status: "Error", message: "Los campos están incompletos" });
   }
-  // Validar email
+  
+  // Validate email format
   if (!EMAIL_REGEX.test(email)) {
     return res.status(400).send({ status: "Error", message: "Formato de email inválido" });
   }
-  // Validar que el usuario no exista
   try {
-    const usuarioExistente = await User.findOne({ user });
+    const usuarioExistente = await User.findOne({ user});
     if (usuarioExistente) {
       return res.status(400).send({ status: "Error", message: "Este usuario ya existe" });
+    }
+
+    const emailExistente = await User.findOne({ email });
+    if (emailExistente) {
+      return res.status(400).send({ status: "Error", message: "Este email ya está registrado" });
     }
   
     // Generar token único para verificación
@@ -107,7 +112,6 @@ async function register(req, res) {
     });
 
     await nuevoUsuario.save();
-
   
     const verificationLink = `http://localhost:4001/verify-email?token=${verificationToken}`;
 
@@ -136,7 +140,7 @@ async function register(req, res) {
 
     return res.status(201).send({
       status: "ok",
-      message: `Usuario ${nuevoUsuario.user} agregado`,
+      message: `Usuario ${user} agregado`,
       redirect: "/"
     });
   } catch (error) {
