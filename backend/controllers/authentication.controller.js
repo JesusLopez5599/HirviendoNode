@@ -109,7 +109,7 @@ async function register(req, res) {
     await nuevoUsuario.save();
 
   
-    const verificationLink = `http://localhost:4001/verify-email?token=${verificationToken}`;
+    const verificationLink = `http://localhost:4001/api/auth/verify-email?token=${verificationToken}`;
 
     await transporter.sendMail({
       from: `"Tu Plataforma" <${process.env.EMAIL_FROM}>`,
