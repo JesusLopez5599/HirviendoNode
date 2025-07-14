@@ -35,7 +35,7 @@ app.get('/admin', (req, res) => {
 });
 
 // Ruta catch-all (para SPA, si usas React o quieres evitar 404)
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
