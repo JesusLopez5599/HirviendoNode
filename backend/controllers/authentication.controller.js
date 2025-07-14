@@ -64,7 +64,7 @@ async function login(req, res) {
 }
 
 async function register(req, res) {
-  const { user, password, email, dni, telefono, categoria, subcategoria, rol } = req.body;
+  let { user, password, email, dni, telefono, categoria, subcategoria, rol } = req.body;
   // Sanitizar entradas
   user = sanitizeInput(user);
   email = sanitizeInput(email);
