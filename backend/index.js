@@ -29,15 +29,22 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// Ruta para admin.html
+// Ruta para admin.html, login, register
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/admin.html'));
+  res.sendFile(path.join(__dirname, '../frontend/html/admin.html'));
+});
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/html/login.html'));
+});
+
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/html/register.html'));
 });
 
 // Ruta catch-all (para SPA, si usas React o quieres evitar 404)
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/index.html'));
+// });
 
 // Escuchar en el puerto
 const PORT = process.env.PORT || 4001;

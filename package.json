@@ -1,7 +1,7 @@
 {
   "name": "registro-y-login-en-vivo",
   "version": "1.0.0",
-  "description": "",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "app/index.js",
   "type": "module",
   "scripts": {
@@ -13,7 +13,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
-    "cors":"^2.8.5",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.0",
@@ -23,5 +23,13 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JesusLopez5599/HirviendoNode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JesusLopez5599/HirviendoNode/issues"
+  },
+  "homepage": "https://github.com/JesusLopez5599/HirviendoNode#readme"
 }
