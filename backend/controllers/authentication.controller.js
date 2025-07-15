@@ -166,8 +166,42 @@ export async function verifyEmail(req, res) {
   }
 }
 
+// Función para obtener estadísticas de usuarios
+async function getUserStats(req, res) {
+  try {
+    // Obtener total de usuarios
+    const totalUsers = await User.countDocuments();
+    
+    // Obtener usuarios verificados
+    const verifiedUsers = await User.countDocuments({ verified: true });
+    
+    // Obtener usuarios no verificados
+    const pendingUsers = await User.countDocuments({ verified: false });
+    
+    // Obtener usuarios creados hoy
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const activeToday = await User.countDocuments({
+      createdAt: { $gte: today, $lt: tomorrow }
+    });
+    
+    res.json({
+      totalUsers,
+      verifiedUsers,
+      pendingUsers,
+      activeToday
+    });
+  } catch (error) {
+    console.error("Error al obtener estadísticas:", error);
+    res.status(500).json({ error: "Error al obtener estadísticas" });
+  }
+}
+
 export const methods = {
   login,
   register,
-  //registrarUsuario,
+  getUserStats
 };

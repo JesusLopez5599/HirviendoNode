@@ -12,4 +12,7 @@ router.post('/login', authController.login);
 // Ruta para verificar correo electrónico (enlace enviado al email)
 router.get('/verify-email', verifyEmail);
 
+// Ruta para obtener estadísticas de usuarios
+router.get('/stats', authController.getUserStats);
+
 export default router;
