@@ -1,70 +1,198 @@
-# Getting Started with Create React App
+# Plataforma Web con MongoDB Atlas
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Esta es una plataforma web completa con sistema de registro y login de usuarios, desarrollada con Node.js, Express, MongoDB Atlas y una interfaz web moderna.
 
-## Available Scripts
+## Características
 
-In the project directory, you can run:
+- ✅ Registro de usuarios con validación de campos
+- ✅ Sistema de login con JWT
+- ✅ Verificación de email obligatoria
+- ✅ Panel de administración
+- ✅ Interfaz web moderna y responsive
+- ✅ Conexión a MongoDB Atlas
+- ✅ Encriptación de contraseñas con bcrypt
+- ✅ Envío de emails de verificación
 
-### `npm start`
+## Estructura del Proyecto
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+/
+├── backend/
+│   ├── controllers/
+│   │   └── authentication.controller.js
+│   ├── model/
+│   │   └── User.js
+│   ├── routes/
+│   │   └── authRoutes.js
+│   ├── utils/
+│   │   └── db.js
+│   └── index.js
+├── frontend/
+│   ├── index.html (registro)
+│   ├── login.html
+│   ├── admin.html
+│   ├── styles.css
+│   ├── script.js
+│   ├── login.js
+│   └── admin.js
+├── .env.example
+├── .env
+├── package.json
+└── README.md
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Configuración
 
-### `npm test`
+### 1. Clonar el repositorio
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+git clone <tu-repositorio>
+cd registro-y-login-en-vivo
+```
 
-### `npm run build`
+### 2. Instalar dependencias
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Configurar MongoDB Atlas
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Crear cuenta en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Crear un nuevo cluster
+3. Crear un usuario de base de datos
+4. Obtener la cadena de conexión
 
-### `npm run eject`
+### 4. Configurar variables de entorno
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Copiar `.env.example` a `.env` y configurar:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+cp .env.example .env
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Editar `.env` con tus datos:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```env
+# MongoDB Atlas Connection String
+MONGO_URI=mongodb+srv://tu_usuario:tu_contraseña@cluster0.mongodb.net/hirviendo?retryWrites=true&w=majority
 
-## Learn More
+# JWT Configuration
+JWT_SECRET=tu_clave_secreta_jwt_muy_larga_y_segura
+JWT_EXPIRATION=7d
+JWT_COOKIE_EXPIRES=7
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Email Configuration (Gmail)
+EMAIL_FROM=tu_correo@gmail.com
+EMAIL_PASS=tu_contraseña_de_aplicación
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Server Configuration
+PORT=4001
+```
 
-### Code Splitting
+### 5. Configurar Gmail para emails
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Activar autenticación de 2 factores en Gmail
+2. Crear contraseña de aplicación
+3. Usar la contraseña de aplicación en `EMAIL_PASS`
 
-### Analyzing the Bundle Size
+## Uso
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Iniciar el servidor
 
-### Making a Progressive Web App
+```bash
+npm run dev
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+El servidor estará disponible en `http://localhost:4001`
 
-### Advanced Configuration
+### Páginas disponibles
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **/** - Página de registro
+- **/login.html** - Página de login
+- **/admin** - Panel de administración (solo para admins)
 
-### Deployment
+### Roles de usuario
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **cliente** - Usuario normal
+- **proveedor** - Proveedor de servicios
+- **administrador** - Acceso al panel de administración
 
-### `npm run build` fails to minify
+### Flujo de registro
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Usuario llena el formulario de registro
+2. Se guarda en MongoDB Atlas
+3. Se envía email de verificación
+4. Usuario hace clic en el enlace de verificación
+5. Cuenta se activa
+6. Usuario puede hacer login
+
+## API Endpoints
+
+- `POST /api/auth/register` - Registrar nuevo usuario
+- `POST /api/auth/login` - Iniciar sesión
+- `GET /api/auth/verify-email` - Verificar email
+- `GET /api/auth/verify-admin` - Verificar si es admin
+- `GET /api/auth/users` - Obtener usuarios (solo admin)
+
+## Esquema de Usuario
+
+```javascript
+{
+  user: String,        // Nombre de usuario
+  email: String,       // Correo electrónico
+  dni: String,         // DNI
+  telefono: String,    // Teléfono
+  password: String,    // Contraseña encriptada
+  categoria: String,   // Categoría de trabajo
+  subcategoria: String, // Subcategoría
+  rol: String,         // Rol del usuario
+  verified: Boolean,   // Estado de verificación
+  verificationToken: String // Token de verificación
+}
+```
+
+## Dependencias
+
+- **express** - Framework web
+- **mongoose** - ODM para MongoDB
+- **bcryptjs** - Encriptación de contraseñas
+- **jsonwebtoken** - Autenticación JWT
+- **nodemailer** - Envío de emails
+- **cors** - Middleware CORS
+- **dotenv** - Variables de entorno
+- **cookie-parser** - Manejo de cookies
+
+## Desarrollo
+
+Para desarrollo, usa:
+
+```bash
+npm run dev
+```
+
+Esto inicia el servidor con `nodemon` para recarga automática.
+
+## Notas Importantes
+
+- La verificación de email es obligatoria para activar la cuenta
+- Solo usuarios con rol "administrador" pueden acceder al panel de admin
+- Las contraseñas se encriptan con bcrypt
+- Los tokens JWT tienen una duración de 7 días por defecto
+- Los emails se envían a través de Gmail SMTP
+
+## Troubleshooting
+
+### Error de conexión a MongoDB
+- Verificar que la cadena de conexión sea correcta
+- Comprobar que la IP esté en la whitelist de MongoDB Atlas
+- Verificar usuario y contraseña
+
+### Error de envío de email
+- Verificar que Gmail tenga autenticación de 2 factores
+- Usar contraseña de aplicación, no la contraseña normal
+- Verificar que el EMAIL_FROM y EMAIL_PASS sean correctos
+
+### Error de JWT
+- Verificar que JWT_SECRET esté configurado
+- Asegurar que la cookie se esté enviando correctamente

@@ -12,4 +12,10 @@ router.post('/login', authController.login);
 // Ruta para verificar correo electrónico (enlace enviado al email)
 router.get('/verify-email', verifyEmail);
 
+// Ruta para verificar si el usuario es admin
+router.get('/verify-admin', authController.verifyAdmin);
+
+// Ruta para obtener todos los usuarios (solo para admins)
+router.get('/users', authController.getUsers);
+
 export default router;
