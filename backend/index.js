@@ -5,6 +5,7 @@ import { connectDB } from './utils/db.js';
 import authRoutes from './routes/authRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { initializeUser } from './utils/initializeUser.js'; 
 
 dotenv.config();
 
@@ -15,8 +16,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexión a la base de datos
-connectDB();
+// Funcion para iniciar la aplicacion
+const initializeApp = async () => {
+  try {
+    await connectDB();
+
+    await initializeUser();
+
+    console.log('🟢 Aplicación iniciada correctamente');
+  } catch (error) {
+    console.error('🔴 Error al conectar a la base de datos:', error);
+    process.exit(1); // Terminar el proceso si no se puede conectar
+  }
+};
+initializeApp();
 
 // Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
