@@ -23,6 +23,56 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+const verifyJWT = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).send({ status: "Error", message: "Token no proporcionado" });
+  }
+  try {
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.user;
+    next();
+  } catch (error) {
+    return res.status(401).send({ status: "Error", message: "Token inválido" });
+  }
+};  
+
+async function verifyAdmin(req, res) {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).send({ status: "Error", message: "Token no proporcionado" });
+    }
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ user: decoded.user });
+    if (!user || user.rol !== 'admin') {
+      return res.status(403).send({ status: "Error", message: "Acceso denegado" });
+    }
+    res.json({ status:"ok", message: "Admin verificado" });
+  } catch (error) {
+    res.status(401).json({ status: "Error", message: "Token inválido o expirado" });
+  }
+}
+
+async function getUsers(req, res) {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ status: "Error", message: "Token no valido" });
+    }
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    const adminUser = await User.findOne({ user: decoded.user });
+    if (!adminUser || adminUser.rol !== 'admin') {
+      return res.status(403).json({ status: "Error", message: "Acceso denegado" });
+    }
+    const users = await User.find({}, {password:0, verificationToken:0});
+    res.json({ status: "ok", users });
+  } catch (error) {
+    console.error("Error al obtener usuarios:", error);
+    res.status(500).json({ status: "Error", message: "Error en el servidor" });
+  }
+} 
+// Middleware para verificar si el usuario es admin
 async function login(req, res) {
   const { user, password } = req.body; 
 
@@ -169,5 +219,7 @@ export async function verifyEmail(req, res) {
 export const methods = {
   login,
   register,
-  //registrarUsuario,
+  verifyJWT,
+  verifyAdmin,
+  getUsers, 
 };
