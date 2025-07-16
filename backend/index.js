@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './utils/db.js';
+import { initializeUsers } from './utils/initializeUsers.js';
 import authRoutes from './routes/authRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,8 +16,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexión a la base de datos
-connectDB();
+// Función para inicializar la aplicación
+const initializeApp = async () => {
+  try {
+    // Conexión a la base de datos
+    await connectDB();
+    
+    // Inicializar usuarios predeterminados
+    await initializeUsers();
+    
+    console.log("🚀 Aplicación inicializada correctamente");
+  } catch (error) {
+    console.error("❌ Error al inicializar la aplicación:", error);
+    process.exit(1);
+  }
+};
+
+// Inicializar la aplicación
+initializeApp();
 
 // Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
