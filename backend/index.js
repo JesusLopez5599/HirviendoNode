@@ -6,6 +6,10 @@ import authRoutes from './routes/authRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initializeUser } from './utils/initializeUser.js'; 
+//import User from './model/User.js';
+//import { methods as authentication } from "./controllers/authentication.controller.js";
+//import { methods as authorization } from "./middlewares/authorization.js";
+//import { methods as userController } from "./controllers/user.controller.js";
 
 dotenv.config();
 

@@ -1,6 +1,6 @@
 import bcryptjs from "bcryptjs";
 
-import User from "../models/User.js";
+import User from "../model/User.js";
 
 const defaultUser = [
     {
