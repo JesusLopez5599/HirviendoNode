@@ -133,9 +133,9 @@ async function register(req, res) {
   }
   // Validar que el usuario no exista
   try {
-    const usuarioExistente = await User.findOne({ user });
+    const usuarioExistente = await User.findOne({ user, email, dni });
     if (usuarioExistente) {
-      return res.status(400).send({ status: "Error", message: "Este usuario ya existe" });
+      return res.status(400).send({ status: "Error", message: "Este usuario, email o dni ya existe" });
     }
   
     // Generar token único para verificación
@@ -190,10 +190,67 @@ async function register(req, res) {
       redirect: "/"
     });
   } catch (error) {
-    console.error("Error en registro:", error);
-    res.status(500).send({ status: "Error", message: "Error en el servidor" });
-  }
+  console.error("❌ Error en registro:", error);
+  res.status(500).json({
+    status: "Error",
+    message: "Error en el servidor",
+    detail: error.message,
+  });
 }
+}
+
+// POST /api/auth/reseat-request
+async function requestPasswordReset(req, res) {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "Usuario no encontrado" });
+  }
+
+  const token = crypto.randomBytes(32).toString('hex');
+  user.resetToken = token;
+  user.resetTokenExpire = Date.now() + 3600000; // 1 hora
+  await user.save();
+
+  const link = `http://localhost:4001/reset-password.html?token=${token}`;
+
+  await transporter.sendMail({
+    from: `"Recuperación Hirviendo" <${process.env.EMAIL_FROM}>`,
+    to: email,
+    subject: "Restablece tu contraseña",
+    html: `
+      <h3>¿Olvidaste tu contraseña?</h3>
+      <p>Haz clic aquí para restablecerla:</p>
+      <a href="${link}">${link}</a>
+    `
+  });
+
+  res.json({ message: "Correo enviado con el enlace para restablecer la contraseña" });
+}
+
+// POST /api/auth/reset-password
+async function resetPassword(req, res) {
+  const { token, newPassword } = req.body;
+
+  const user = await User.findOne({
+    resetToken: token,
+    resetTokenExpire: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Token inválido o expirado" });
+  }
+
+  const salt = await bcryptjs.genSalt(10);
+  user.password = await bcryptjs.hash(newPassword, salt);
+  user.resetToken = undefined;
+  user.resetTokenExpire = undefined;
+
+  await user.save();
+  res.json({ message: "Contraseña actualizada correctamente" });
+}
+
 // Verificación de cuenta por email
 export async function verifyEmail(req, res) {
   const { token } = req.query;

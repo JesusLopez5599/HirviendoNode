@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
   categoria: {type: String, required: true},  //tipo de trabajo
   subcategoria: {type: String, required:true},  // lugar
   rol:{type: String, required:true}, // rol del trabajador
+  resetToken: { type: String },// reset password token
+  resetTokenExpire: { type: Date }, // reset password token expiration
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
