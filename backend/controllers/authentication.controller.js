@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
+import mongoose from "mongoose";
 import User from '../model/User.js';
 import crypto from "crypto";
 
@@ -31,6 +32,11 @@ async function login(req, res) {
   }
 
   try {
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).send({ status: "Error", message: "Base de datos no disponible" });
+    }
+
     const usuarioDB = await User.findOne({ user });
     if (!usuarioDB) {
       return res.status(400).send({ status: "Error", message: "Usuario no encontrado" });
@@ -83,6 +89,11 @@ async function register(req, res) {
   }
   // Validar que el usuario no exista
   try {
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).send({ status: "Error", message: "Base de datos no disponible" });
+    }
+
     const usuarioExistente = await User.findOne({ user });
     if (usuarioExistente) {
       return res.status(400).send({ status: "Error", message: "Este usuario ya existe" });
@@ -149,6 +160,11 @@ export async function verifyEmail(req, res) {
   const { token } = req.query;
 
   try {
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).send("Base de datos no disponible");
+    }
+
     const usuario = await User.findOne({ verificationToken: token });
 
     if (!usuario) {
