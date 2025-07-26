@@ -58,6 +58,9 @@ app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/html/register.html'));
 });
 
+app.get('/reset_final', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/html/reset_final.html'));
+});
 // Ruta catch-all (para SPA, si usas React o quieres evitar 404)
 // app.get('/*', (req, res) => {
 //   res.sendFile(path.join(__dirname, '../frontend/index.html'));

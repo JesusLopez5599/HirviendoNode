@@ -279,4 +279,6 @@ export const methods = {
   verifyJWT,
   verifyAdmin,
   getUsers, 
+  requestPasswordReset,  
+  resetPassword 
 };
