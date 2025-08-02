@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hirviendo | Bienvenido</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f27121, #e94057);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 2rem 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      max-width: 400px;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 2rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn-group a button {
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      background-color: white;
+      color: #e94057;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .btn-group a button:hover {
+      background-color: #ffe6ec;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>¡Bienvenido a Hirviendo!</h1>
+    <p>Accede a tu cuenta o regístrate para comenzar</p>
+    <div class="btn-group">
+      <a href="/html/login.html"><button>Iniciar sesión</button></a>
+      <a href="/html/register.html"><button>Registrarse</button></a>
+    </div>
+  </div>
+</body>
+</html>

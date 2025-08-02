@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/admin.js" defer></script>
+</head>
+<body>
+  <main>
+    <div class="form-container">
+      <h1>Bienvenido al área de administración</h1>
+
+      <button>Cerrar sesión</button>
+    </div>
+  </main>
+   <script>
+  fetch("/api/mi-usuario")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("bienvenida").textContent = `Bienvenido/a, ${data.user} (${data.categoria} - ${data.subcategoria})`;
+    })
+    .catch(err => console.error("Error cargando usuario", err));
+  </script> 
+</body>
+</html>

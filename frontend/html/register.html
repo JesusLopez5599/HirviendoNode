@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/register.js" defer></script>
+</head>
+<body>
+  <main>
+    <div class="form-container">
+      <h1>Crear cuenta</h1>
+      <p>Crea tu cuenta para entrar a la plataforma.</p>
+      <form id="register-form">
+        <label for="user" class="sr-only">User</label>
+        <input type="text" name="user" id="user" placeholder="Nombre de usuario">
+
+        <label for="email" class="sr-only">Email</label>
+        <input type="email" name="email" id="email" placeholder="Correo electrónico">
+
+        <label for="confirm-email" class="sr-only">Confirmar correo electrónico</label>
+        <input type="email" name="confirm-email" id="confirm-email" placeholder="Confirmar correo electrónico" required>
+
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" name="password" id="password" placeholder="Contraseña">
+
+        <label for="confirm-password" class="sr-only">Confirmar contraseña</label>
+        <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirmar contraseña" required>
+
+        <label for="dni" class="sr-only">DNI</label>
+        <input type="text" name="dni" id="dni" placeholder="DNI" required>
+        
+        <label for="telefono" class="sr-only">Teléfono</label>
+        <input type="text" name="telefono" id="telefono" placeholder="Número de teléfono" required>
+
+        <!-- Selección principal -->
+      <label for="categoria-select" class="sr-only">Categoría</label>
+      <select id="categoria-select" name="categoria">
+        <option disabled selected>Selecciona una categoría</option>
+        <option value="oficinas_centrales">Oficinas Centrales</option>
+        <option value="obrador">Obrador</option>
+        <option value="tabernas">Tabernas</option>
+        <option value="franquicias">Franquicias</option>
+      </select>
+
+      <!-- Subcategorías -->
+      <label for="subcategoria-select" class="sr-only">Subcategoría</label>
+      <select id="subcategoria-select" name="subcategoria" style="display:none;">
+        <option disabled selected>Selecciona una subcategoría</option>
+      </select>
+      
+    <!-- rol del empleado-->
+      <label for="rol">Rol</label>
+      <select id="rol" name="rol" required>
+        <option value="" disabled selected>Selecciona un rol</option>
+        <option value="administración">Administración</option>
+        <option value="obrador">Obrador</option>
+        <option value="camarero/a">Camarero/a</option>
+        <option value="cocinero/a">Cocinero/a</option>
+        <option value="ayudante de cocina">Ayudante de cocina</option>
+        <option value="dirección">Dirección</option>
+        <option value="directiva">Directiva</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+        <button type="submit">Iniciar sesión</button>
+        <p class="error escondido">Error al registrarse</p>
+      </form>
+      <p>¿Ya estás registrado? - <a href="/">Acceda al login</a></p>
+    </div>
+  </main>
+  <script>
+    const opciones = {
+      oficinas_centrales: ["emplatando"],
+      obrador: ["marmitaco"],
+      tabernas: [
+        "Jose Mari",
+        "Perretxico (Victoria)",
+        "Perretxico (Logroño)",
+        "Perretxico (Escotilla)",
+        "Perretxico (Cuzco)"
+      ],
+      franquicias: [
+        "Narvaez",
+        "Chueca",
+        "Chamberí",
+        "Corazón de María",
+        "Bernabéu"
+      ]
+    };
+
+    const categoriaSelect = document.getElementById("categoria-select");
+    const subcategoriaSelect = document.getElementById("subcategoria-select");
+    const rol = document.getElementById('rol').value;
+
+    categoriaSelect.addEventListener("change", () => {
+      const categoria = categoriaSelect.value;
+      const subopciones = opciones[categoria];
+
+      // Limpiar subcategorías anteriores
+      subcategoriaSelect.innerHTML = '<option disabled selected>Selecciona una subcategoría</option>';
+      subopciones.forEach(sub => {
+        const opt = document.createElement("option");
+        opt.value = sub;
+        opt.textContent = sub;
+        subcategoriaSelect.appendChild(opt);
+      });
+
+      subcategoriaSelect.style.display = "inline-block";
+    });
+
+    subcategoriaSelect.addEventListener("change", () => {
+      const id = subcategoriaSelect.value;
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  </script>
+</body>
+</html>
