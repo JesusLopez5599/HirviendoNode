@@ -22,7 +22,7 @@ router.get('/verify-admin', authController.verifyAdmin);
 router.get('/users', authController.getUsers);
 
 // Ruta para restablecer contraseña
-router.post('/reset-request', authController.requestPasswordReset);
+router.post('/request-reset-password', authController.requestPasswordReset);
 router.post('/reset-password', authController.resetPassword);
 
 

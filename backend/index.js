@@ -58,6 +58,10 @@ app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/html/register.html'));
 });
 
+app.get('/reset-request', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/html/reset-request.html'));
+});
+
 app.get('/reset_final', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/html/reset_final.html'));
 });
